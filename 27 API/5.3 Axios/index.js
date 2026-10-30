@@ -27,6 +27,37 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
   console.log(req.body);
+  try{
+    axios.get("https://bored-api.appbrewery.com/filter", {
+      params:{
+        type: req.body.type,
+        participants: req.body.participants
+      },
+      timeout: 5000})
+    .then(function (response){
+      var ob_keys = Object.keys(response.data);
+      var ran_key = ob_keys[Math.floor(Math.random() * ob_keys.length)];
+      var ran_activity = response.data[ran_key];
+      res.render("index.ejs", {data: ran_activity});
+    })
+    .catch(function(error){
+      console.log("incatch")
+      console.log(error.message);
+      console.error("Failed to make request:", error.message);
+      res.render("index.ejs", {
+        error: error.message,
+      });
+    })
+    .finally(function() {
+      console.log("api request end");
+    });
+  } catch (error) {
+    console.error("Failed to make request:", error.message);
+    res.render("index.ejs", {
+      error: error.message,
+    })
+  }
+  
 
   // Step 2: Play around with the drop downs and see what gets logged.
   // Use axios to make an API request to the /filter endpoint. Making
@@ -36,6 +67,7 @@ app.post("/", async (req, res) => {
   // Step 3: If you get a 404 error (resource not found) from the API request.
   // Pass an error to the index.ejs to tell the user:
   // "No activities that match your criteria."
+  
 });
 
 app.listen(port, () => {
