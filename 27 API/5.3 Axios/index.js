@@ -25,9 +25,16 @@ app.get("/", async (req, res) => {
   }
 });
 
+  // Step 2: Play around with the drop downs and see what gets logged.
+  // Use axios to make an API request to the /filter endpoint. Making
+  // sure you're passing both the type and participants queries.
+  // Render the index.ejs file with a single *random* activity that comes back
+  // from the API request.
+  // Step 3: If you get a 404 error (resource not found) from the API request.
+  // Pass an error to the index.ejs to tell the user:
+  // "No activities that match your criteria."
+  
 app.post("/", async (req, res) => {
-  console.log(req.body);
-  try{
     axios.get("https://bored-api.appbrewery.com/filter", {
       params:{
         type: req.body.type,
@@ -41,33 +48,21 @@ app.post("/", async (req, res) => {
       res.render("index.ejs", {data: ran_activity});
     })
     .catch(function(error){
-      console.log("incatch")
-      console.log(error.message);
       console.error("Failed to make request:", error.message);
-      res.render("index.ejs", {
-        error: error.message,
-      });
+      if(error.status == 404){
+        res.render("index.ejs", {
+          error: "No activities that match your criteria."
+        });
+      } else {
+        res.render("index.ejs", {
+          error: error.message
+        });
+      }
     })
     .finally(function() {
       console.log("api request end");
     });
-  } catch (error) {
-    console.error("Failed to make request:", error.message);
-    res.render("index.ejs", {
-      error: error.message,
-    })
-  }
-  
 
-  // Step 2: Play around with the drop downs and see what gets logged.
-  // Use axios to make an API request to the /filter endpoint. Making
-  // sure you're passing both the type and participants queries.
-  // Render the index.ejs file with a single *random* activity that comes back
-  // from the API request.
-  // Step 3: If you get a 404 error (resource not found) from the API request.
-  // Pass an error to the index.ejs to tell the user:
-  // "No activities that match your criteria."
-  
 });
 
 app.listen(port, () => {

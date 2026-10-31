@@ -33,8 +33,8 @@
       </select>
       <button type="submit" class="form-submit">Go</button>
     </form>
-    <% if (typeof data != 'undefined') {%>
     <section id="cards" class="cards">
+      <% if (typeof data != 'undefined') {%>
       <article class="card-item">
         <h2 class="card-activity">
           <%= data.activity %>
@@ -52,7 +52,7 @@
       <% } else { %>
       <div id="tag-error" class="tag-error">
         <!-- Show any errors that were sent from the backend -->
-         <%= error.message %>
+         <%= error %>
       </div>
       <% } %>
 
